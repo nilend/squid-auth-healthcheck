@@ -1,9 +1,5 @@
 package checker
 
-import (
-	"sync"
-)
-
 func nullHandler(buf []byte, userdata interface{}) bool {
 	return true
 }
@@ -17,5 +13,5 @@ type HealthResponse struct {
 
 // Interface for publishers
 type Interface interface {
-	Check(urls []string, ch chan HealthResponse, wg *sync.WaitGroup)
+	Check(urls []string, ch chan HealthResponse)
 }

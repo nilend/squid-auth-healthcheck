@@ -1,8 +1,6 @@
 package checker
 
 import (
-	"sync"
-
 	curl "github.com/andelf/go-curl"
 )
 
@@ -22,9 +20,7 @@ func NewAuthNo(ProxyAddr string, ProxyPort int, ConnectionTimeout int) *AuthNo {
 	return &a
 }
 
-func (a *AuthNo) Check(urls []string, ch chan HealthResponse, wg *sync.WaitGroup) {
-	var innerWg sync.WaitGroup
-	innerWg.Add(len(urls))
+func (a *AuthNo) Check(urls []string, ch chan HealthResponse) {
 	for _, url := range urls {
 		go func(u string) {
 			conn := curl.EasyInit()
@@ -48,9 +44,6 @@ func (a *AuthNo) Check(urls []string, ch chan HealthResponse, wg *sync.WaitGroup
 				}
 			}
 			conn.Cleanup()
-			innerWg.Done()
 		}(url)
 	}
-	innerWg.Wait()
-	wg.Done()
 }
